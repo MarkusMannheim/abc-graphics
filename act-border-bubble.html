@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "UA-155991615-1");
+    </script>
+
+    <!-- metaphysics -->
+    <meta charset="utf-8">
+    <title>ACT border bubble</title>
+    <meta name="author" content="Markus Mannheim">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- initial scripts -->
+    <script src="./resources/d3.v6.min.js"></script>
+    <script src="./resources/topojson.v3.min.js"></script>
+    <link href="./resources/act-border-bubble.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+  </head>
+
+  <body>
+    <svg id="map">
+
+    </svg>
+
+    <script>
+      // page elements
+      map = d3.select("#map");
+
+      // load LGA data
+      Promise.all([
+        d3.json("./data/nsw.geojson")
+      ])
+        .then(function(data) {
+
+          // data
+          nswData = data[0];
+
+          // draw map
+          projection = d3.geoConicEqualArea()
+            .parallels([-26.293056, -44.293056])
+            .rotate([-149.126944, 0]);
+          path = d3.geoPath()
+            .projection(projection);
+
+          // prepare chart
+          margin = {
+            top: 32,
+            right: 32,
+            bottom: 32,
+            left: 32
+          };
+
+          // fade in; calculate chart dimensions
+          d3.timeout(function() {
+            window.addEventListener("resize", resize);
+            resize();
+          }, 1000);
+        });
+
+      function resize() {
+        dimensions = document.getElementById("map").getBoundingClientRect();
+        width = dimensions.width;
+        height = dimensions.height;
+        projection.fitSize([width, height], nswData);
+      }
+    </script>
+  </body>
+</html>
