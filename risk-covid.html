@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "UA-155991615-1");
+    </script>
+
+    <!-- metaphysics -->
+    <meta charset="utf-8">
+    <title>COVID-19 disease risks</title>
+    <meta name="author" content="Markus Mannheim">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- scripts -->
+    <script src="./resources/d3.v6.min.js"></script>
+    <script src="./scripts/scripts.js"></script>
+    <link href="./resources/style.css" rel="stylesheet">
+    <link href="./resources/risk-covid.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+  </head>
+
+  <body>
+
+    <script>
+      // set up page
+      type = "viz";
+      pageSetUp(
+        type, // viz type
+        false, // no header
+        "Source: <a target='_blank' href='https://www1.health.gov.au/internet/main/publishing.nsf/Content/novel_coronavirus_2019_ncov_weekly_epidemiology_reports_australia_2020.htm'>COVID-19 Australia: Epidemiology Report 51</a>"
+      );
+
+      // disease data
+      diseaseData = {
+        notSevere: 42758,
+        hospitalised: 6515,
+        icu: 896,
+        dead: 296
+      };
+
+      // activate
+      window.addEventListener("resize", resize);
+      resize(type);
+
+      data = d3.range(2000)
+        .map(function(d) { return {}; });
+      radius = 5
+      nodes = vizGroup
+        .selectAll(".node")
+          .data(data, function(d, i) { return i; })
+          .join("circle")
+            .attr("class", function(d, i) {
+              if ( i < 296 / 50465 * 2500) {
+                return "node dead";
+              } else if ( i < (296 + 896) / 50465 * 2500) {
+                return "node icu"
+              } else if ( i < (296 + 896 + 6515) / 50465 * 2500) {
+                return "node hospital"
+              } else {
+                return "node";
+              }
+            })
+            .attr("r", radius);
+
+      simulation = d3.forceSimulation(data)
+        .force("charge", d3.forceManyBody().strength(.5))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collision", d3.forceCollide().radius(radius))
+        .on("tick", ticked);
+
+      function ticked() {
+        nodes.attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+      }
+
+    </script>
+  </body>
+</html>

@@ -18,11 +18,35 @@
   box-sizing: border-box;
 }
 body {
-  margin: 0rem;
+  margin: 0 0 0.5rem 0;
   overflow: hidden;
 }
-#map {
+#container {
   position: fixed;
-  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-flow: column;
+}
+#header {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+#footer {
+  margin-top: 1rem;
+  font-size: .9rem;
+  color: #666;
+}
+#footer a, #footer a:visited {
+  color: #248BC9;
+  text-decoration: none;
+}
+#footer a:hover {
+  color: #F75F00;
+}
+#viz, #chart, #map {
   height: 100%;
 }

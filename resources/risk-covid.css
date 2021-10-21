@@ -1,0 +1,13 @@
+/* b: #009CBF o: #F75F00 g: #00A388 --tint-1: #333; --tint-2: #666; --tint-3: #999; --tint-4: #ccc; --tint-5: #e6e6e6; --tint-6: #f2f2f2; */
+.node {
+  fill: #00B395;
+}
+.hospital {
+  fill: #FFB300;
+}
+.icu {
+  fill: #FF6100;
+}
+.dead {
+  fill: #333;
+}
