@@ -5,6 +5,12 @@
   stroke-width: .5;
   opacity: 0;
 }
+.vaccine {
+  fill: #01CFFF;
+  stroke: #333;
+  stroke-width: .5;
+  opacity: 0;
+}
 .hospital {
   fill: #FFB300;
 }
@@ -27,7 +33,7 @@
   border-radius: .5rem;
   margin-right:.5rem;
   text-align: center;
-  width: 120px;
+  width: 145px;
 }
 .legendItem:last-child {
   margin-right: 0;
@@ -44,6 +50,17 @@
 }
 .dead.legendItem {
   background: #333;
+}
+.noreaction.legendItem {
+  background: #01CFFF;
+  color: #333;
+}
+.adversereaction.legendItem {
+  background: #FFB300;
+  color: #333;
+}
+.severereaction.legendItem {
+  background: #FF6100;
 }
 @media only screen and (max-width: 500px) {
   #header {
