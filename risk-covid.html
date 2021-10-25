@@ -31,59 +31,91 @@
       type = "viz";
       pageSetUp(
         type, // viz type
-        false, // no header
+        "1,000 infections", // no header
         false // no footer
       );
 
-      // disease data
-      diseaseData = {
-        hospital: 9446,
-        icu: 1156,
-        dead: 435
-      };
-      diseaseTotal = 62927;
+      // page elements
+      legend = container
+        .append("div")
+          .attr("id", "legend");
+      legendItems = legend
+        .selectAll(".legendItem")
+          .data(["not severe", "hospitalised", "intensive care", "dead"])
+        .enter().append("div")
+          .attr("class", function(d) { return d.replace(" ", "") + " legendItem"; })
+          .text(function(d) { return d; });
 
-      // activate
-      window.addEventListener("resize", function() {
-        resize(type);
-        redraw();
-      });
-      resize(type);
-
-      sample = 1000;
-      data = d3.range(sample)
-        .map(function(d, i) { return {
-          class: (
-            i < diseaseData.dead / diseaseTotal * sample ? "dead" :
-            i < (diseaseData.dead + diseaseData.icu) / diseaseTotal * sample ? "icu" :
-            i < (diseaseData.dead + diseaseData.hospital) / diseaseTotal * sample ? "hospital" :
-            "notSevere"
-          )
-        }; });
-      radius = 7;
+        // format data
+        sample = 1000;
+        infectionData = d3.range(sample)
+        .map(function(d) {
+          return {
+            id: d,
+            class: (
+              d < 296 / 50.465 ? "dead" :
+              d < (296 + 896) / 50.465 ? "icu" :
+              d < (296 + 896 + 6515) / 50.465 ? "hospital" :
+              "none"
+            )
+          };
+        });
 
       nodes = vizGroup
         .selectAll(".node")
-          .data(data, function(d, i) { return i; })
+          .data(infectionData, function(d) { return d.id; })
         .enter().append("circle")
-          .attr("class", function(d) { return d.class + " node"; })
-          .attr("r", radius);
+          .classed("node", true);
 
-      simulation = d3.forceSimulation(data)
-        .force("charge", d3.forceManyBody().strength(.75))
-        .force("collision", d3.forceCollide().radius(radius + 1))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        // .force("x", d3.forceY().y(width / 2))
-        .on("tick", ticked);
+      d3.timeout(function() {
+        // activate
+        window.addEventListener("resize", function() {
+          resize(type);
+          redraw();
+        });
+        resize(type);
+        simulation = d3.forceSimulation(infectionData)
+          .force("center", d3.forceCenter(width / 2, height / 2))
+          .on("tick", ticked);
+        redraw();
+
+        nodes.transition()
+          .duration(2000)
+          .style("opacity", 1);
+
+        d3.timeout(function() {
+          nodes.filter(function(d) {
+              return d.class == "dead" || d.class == "icu" || d.class == "hospital";
+            })
+            .transition()
+              .delay(function(d, i) {
+                return i * 20;
+              })
+              .duration(500)
+              .style("fill", function(d) {
+                return (
+                  d.class == "dead" ? "#333" :
+                  d.class == "icu" ? "#FF6100" :
+                  "#FFB300"
+                );
+              });
+        }, 3000);
+
+      }, 1000);
 
       function ticked() {
-        nodes.attr("cx", function(d) { return d.x; })
+        d3.selectAll(".node")
+          .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
       }
 
       function redraw() {
-        simulation.force("center", d3.forceCenter(width / 2, height / 2))
-          .restart();
+        radius = (width > 500 ? 8.25 : 4.25);
+        d3.selectAll(".node").attr("r", radius);
+        simulation.force("collision", d3.forceCollide().radius((width > 500 ? radius + 1 : radius + .5)))
+          .force("charge", d3.forceManyBody().strength((width > 500 ? 2 : 2.5)))
+          .force("center", d3.forceCenter(width / 2, height / 2))
+          .alpha(.3).restart();
       }
     </script>
   </body>
