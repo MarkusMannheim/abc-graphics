@@ -37,11 +37,11 @@
 
       // disease data
       diseaseData = {
-        notSevere: 42758,
-        hospitalised: 6515,
-        icu: 896,
-        dead: 296
+        hospital: 9446,
+        icu: 1156,
+        dead: 435
       };
+      diseaseTotal = 62927;
 
       // activate
       window.addEventListener("resize", function() {
@@ -52,36 +52,28 @@
 
       sample = 1000;
       data = d3.range(sample)
-        .map(function(d) { return {
-          x: d3.randomNormal(width / 2, width / 8)(),
-          y: d3.randomNormal(height / 2, height / 8)()
+        .map(function(d, i) { return {
+          class: (
+            i < diseaseData.dead / diseaseTotal * sample ? "dead" :
+            i < (diseaseData.dead + diseaseData.icu) / diseaseTotal * sample ? "icu" :
+            i < (diseaseData.dead + diseaseData.hospital) / diseaseTotal * sample ? "hospital" :
+            "notSevere"
+          )
         }; });
-      radius = 8
+      radius = 7;
+
       nodes = vizGroup
         .selectAll(".node")
           .data(data, function(d, i) { return i; })
-          .join("circle")
-            .attr("class", function(d, i) {
-              if ( i < 296 / 50465 * sample) {
-                return "node dead";
-              } else if ( i < (296 + 896) / 50465 * sample) {
-                return "node icu"
-              } else if ( i < (296 + 896 + 6515) / 50465 * sample) {
-                return "node hospital"
-              } else {
-                return "node";
-              }
-            })
-            .attr("r", radius);
+        .enter().append("circle")
+          .attr("class", function(d) { return d.class + " node"; })
+          .attr("r", radius);
 
       simulation = d3.forceSimulation(data)
-        .force("charge", d3.forceManyBody().strength(.5))
-        // .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("collision", d3.forceCollide().radius(radius))
-        .force("x", d3.forceX().x(function(d, i) {
-      		return i % 2 == 0 ? width / 4 : width / 4 * 3;
-      	}))
-        // .force("y", d3.forceY().y(height / 2))
+        .force("charge", d3.forceManyBody().strength(.75))
+        .force("collision", d3.forceCollide().radius(radius + 1))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        // .force("x", d3.forceY().y(width / 2))
         .on("tick", ticked);
 
       function ticked() {

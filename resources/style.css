@@ -32,11 +32,12 @@ body {
 }
 #header {
   font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  margin-bottom: .75rem;
+  text-align: center;
 }
 #footer {
-  margin-top: 1rem;
+  margin-top: .75rem;
   font-size: .9rem;
   color: #666;
 }
@@ -49,4 +50,14 @@ body {
 }
 #viz, #chart, #map {
   height: 100%;
+}
+@media only screen and (max-width: 500px) {
+  #header {
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+  #footer {
+    margin-top: .5rem;
+    font-size: .8rem;
+  }
 }

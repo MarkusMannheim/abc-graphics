@@ -1,6 +1,9 @@
 /* b: #009CBF o: #F75F00 g: #00A388 --tint-1: #333; --tint-2: #666; --tint-3: #999; --tint-4: #ccc; --tint-5: #e6e6e6; --tint-6: #f2f2f2; */
 .node {
-  fill: #00B395;
+  fill: #00A388;
+  stroke: #333;
+  stroke-width: .5;
+  opacity: 0;
 }
 .hospital {
   fill: #FFB300;
@@ -10,4 +13,58 @@
 }
 .dead {
   fill: #333;
+}
+#legend {
+  display: flex;
+  justify-content: center;
+  margin-top: .75rem;
+}
+.legendItem {
+  color: white;
+  font-weight: bold;
+  font-size: .95rem;
+  padding: 3px 6px;
+  border-radius: .5rem;
+  margin-right:.5rem;
+  text-align: center;
+  width: 120px;
+}
+.legendItem:last-child {
+  margin-right: 0;
+}
+.notsevere.legendItem {
+  background: #00A388;
+}
+.hospitalised.legendItem {
+  background: #FFB300;
+  color: #333;
+}
+.intensivecare.legendItem {
+  background: #FF6100;
+}
+.dead.legendItem {
+  background: #333;
+}
+@media only screen and (max-width: 500px) {
+  #header {
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+  #legend {
+    margin-top: .5rem;
+    flex-flow: wrap;
+  }
+  .legendItem {
+    font-size: .85rem;
+    padding: 2px 4px;
+    border-radius: .5rem;
+    margin-right: .25rem;
+    margin-bottom: .25rem;
+  }
+  .legendItem:nth-child(even) {
+    margin-right: 0;
+  }
+  .legendItem:nth-child(3), .legendItem:nth-child(4) {
+    margin-bottom: 0;
+  }
 }
