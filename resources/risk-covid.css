@@ -62,6 +62,16 @@
 .severereaction.legendItem {
   background: #FF6100;
 }
+#subheader {
+  display: flex;
+  justify-content: space-between;
+}
+.subhead {
+  margin-top: .5rem;
+  width: 100%;
+  font-size: 1.1rem;
+  color: #999;
+}
 @media only screen and (max-width: 500px) {
   #header {
     font-size: 1.1rem;
