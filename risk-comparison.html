@@ -35,15 +35,12 @@
       );
 
       // subheading
-      subheader = header
-        .append("div")
-          .attr("id", "subheader");
-      subheads = subheader
-        .selectAll(".subhead")
-          .data(["vaccinated", "unvaccinated"])
-        .enter().append("div")
-          .attr("class", function(d) { return d.replace(" ", "") + " subhead"; })
-          .text(function(d) { return d; });
+      // subheads = subheader
+      //   .selectAll(".subhead")
+      //     .data(["vaccinated", "unvaccinated"])
+      //   .enter().append("div")
+      //     .attr("class", function(d) { return d.replace(" ", "") + " subhead"; })
+      //     .text(function(d) { return d; });
 
       // page elements
       legend = container
@@ -61,13 +58,9 @@
         infectionData = d3.range(sample)
         .map(function(d) {
           return {
+            vax: (d < 4220 * 1000 / (4220 + 5880 + 33493 + 11987) ? "full" : d < (4220 + 5880) * 1000 / (4220 + 5880 + 33493 + 11987) ? "part" : null),
             id: d,
-            class: (
-              d < 296 / 50.465 ? "dead" :
-              d < (296 + 896) / 50.465 ? "icu" :
-              d < (296 + 896 + 6515) / 50.465 ? "hospital" :
-              "none"
-            )
+            class: null
           };
         });
 
@@ -120,11 +113,13 @@
       }
 
       function redraw() {
-        radius = (width > 500 ? 8.25 : 4.25);
+        radius = (width > 500 ? 5 : 4.25);
         d3.selectAll(".node").attr("r", radius);
         simulation.force("collision", d3.forceCollide().radius((width > 500 ? radius + 1 : radius + .5)))
-          .force("charge", d3.forceManyBody().strength((width > 500 ? 2 : 2.5)))
-          .force("center", d3.forceCenter(width / 2, height / 2))
+          .force("charge", d3.forceManyBody().strength((width > 500 ? 2.5 : 2.5)))
+          .force("y", d3.forceY().y(function(d) {
+            return d.vax == "full" ? height / 4 : d.vax == "part" ? height / 2 : height;
+          }))
           .alpha(.3).restart();
       }
     </script>
