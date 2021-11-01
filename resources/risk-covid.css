@@ -5,20 +5,14 @@
   stroke-width: .5;
   opacity: 0;
 }
+.node.uninfected {
+  fill: none;
+}
 .vaccine {
   fill: #01CFFF;
   stroke: #333;
   stroke-width: .5;
   opacity: 0;
-}
-.hospital {
-  fill: #FFB300;
-}
-.icu {
-  fill: #FF6100;
-}
-.dead {
-  fill: #333;
 }
 #legend {
   display: flex;
@@ -62,10 +56,15 @@
 .severereaction.legendItem {
   background: #FF6100;
 }
+#subheader {
+  display: flex;
+  justify-content: space-between
+}
 .subhead {
   margin-top: .5rem;
   font-size: 1.1rem;
   color: #999;
+  width: 100%;
 }
 @media only screen and (max-width: 500px) {
   #header {

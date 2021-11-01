@@ -30,17 +30,19 @@
       type = "viz";
       pageSetUp(
         type, // viz type
-        "1,000 infections", // no header
+        "1,000 NSW residents", // no header
         false // no footer
       );
 
-      // subheading
-      // subheads = subheader
-      //   .selectAll(".subhead")
-      //     .data(["vaccinated", "unvaccinated"])
-      //   .enter().append("div")
-      //     .attr("class", function(d) { return d.replace(" ", "") + " subhead"; })
-      //     .text(function(d) { return d; });
+      subheader = header
+        .append("div")
+          .attr("id", "subheader");
+      subheads = subheader
+        .selectAll(".subhead")
+          .data(["vaccinated", "unvaccinated"])
+        .enter().append("div")
+          .attr("class", function(d) { return d.replace(" ", "") + " subhead"; })
+          .text(function(d) { return d; });
 
       // page elements
       legend = container
@@ -58,9 +60,16 @@
         infectionData = d3.range(sample)
         .map(function(d) {
           return {
-            vax: (d < 4220 * 1000 / (4220 + 5880 + 33493 + 11987) ? "full" : d < (4220 + 5880) * 1000 / (4220 + 5880 + 33493 + 11987) ? "part" : null),
+            vax: (d % 2 == 0),
             id: d,
-            class: null
+            class: (
+              (d % 2 == 1) && (d / 2 < 1) ? "dead" :
+              (d % 2 == 1) && (d / 2 < 2) ? "icu" :
+              (d % 2 == 1) && (d / 2 < 12) ? "hospital" :
+              (d % 2 == 0) && (d / 2 < 3) ? "hospital" :
+              (d % 2 == 0) && (d / 2 < 15) ? "notsevere" :
+              (d % 2 == 1) && (d / 2 < 55) ? "notsevere" : "uninfected"
+            )
           };
         });
 
@@ -68,7 +77,9 @@
         .selectAll(".node")
           .data(infectionData, function(d) { return d.id; })
         .enter().append("circle")
-          .classed("node", true);
+          .attr("class", function(d) {
+            return d.class == "uninfected" ? "node uninfected" : "node";
+          });
 
       d3.timeout(function() {
         // activate
@@ -113,12 +124,12 @@
       }
 
       function redraw() {
-        radius = (width > 500 ? 5 : 4.25);
+        radius = (width > 500 ? 7.75 : 4);
         d3.selectAll(".node").attr("r", radius);
         simulation.force("collision", d3.forceCollide().radius((width > 500 ? radius + 1 : radius + .5)))
-          .force("charge", d3.forceManyBody().strength((width > 500 ? 2.5 : 2.5)))
-          .force("y", d3.forceY().y(function(d) {
-            return d.vax == "full" ? height / 4 : d.vax == "part" ? height / 2 : height;
+          .force("charge", d3.forceManyBody().strength((width > 500 ? 1 : 1.75)))
+          .force("x", d3.forceX().x(function(d) {
+            return d.vax ? (width < 500 ? width / 8 : width / 6) : (width < 500 ? width / 8 * 7 : width / 6 * 5);
           }))
           .alpha(.3).restart();
       }
