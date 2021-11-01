@@ -79,7 +79,8 @@
         .enter().append("circle")
           .attr("class", function(d) {
             return d.class == "uninfected" ? "node uninfected" : "node";
-          });
+          })
+          .style("fill", "none");
 
       d3.timeout(function() {
         // activate
@@ -99,7 +100,7 @@
 
         d3.timeout(function() {
           nodes.filter(function(d) {
-              return d.class == "dead" || d.class == "icu" || d.class == "hospital";
+              return d.class == "dead" || d.class == "icu" || d.class == "hospital" || d.class == "notsevere";
             })
             .transition()
               .delay(function(d, i) {
@@ -108,6 +109,7 @@
               .duration(500)
               .style("fill", function(d) {
                 return (
+                  d.class == "notsevere" ? "#00A388" :
                   d.class == "dead" ? "#333" :
                   d.class == "icu" ? "#FF6100" :
                   "#FFB300"

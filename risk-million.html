@@ -12,7 +12,7 @@
 
     <!-- metaphysics -->
     <meta charset="utf-8">
-    <title>COVID-19 vaccine risks</title>
+    <title>COVID-19 vaccine outcomes</title>
     <meta name="author" content="Markus Mannheim">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -31,9 +31,29 @@
       type = "viz";
       pageSetUp(
         type, // viz type
-        "1,000 vaccinations", // no header
+        "2,000,000 vaccinations", // no header
         false // no footer
       );
+
+      // data
+      vaxData = [
+        ["noreaction", 809.6835272],
+        ["adversereaction", 7.189267541],
+        ["severereaction", 3.601545205],
+        ["dead", 0.564189584]
+      ];
+
+      // circles & mask
+      mask = vizGroup
+        .append("clipPath")
+          .attr("id", "mask");
+      mask.append("circle");
+      outcomes = vizGroup
+        .selectAll("circle.outcome")
+          .data(vaxData)
+        .enter().append("circle")
+          .attr("class", function(d) { return d[0] + " outcome"; })
+          .attr("clip-path", "url(#mask)");
 
       // page elements
       legend = container
@@ -46,24 +66,7 @@
           .attr("class", function(d) { return d.replace(" ", "").replace("-", "") + " legendItem"; })
           .text(function(d) { return d; });
 
-        // format data
-        sample = 1000;
-        infectionData = d3.range(sample)
-        .map(function(d) {
-          return {
-            id: d,
-            class: (
-              d == 0 ? "adversereaction" :
-              null
-            )
-          };
-        });
-
-      vaccines = vizGroup
-        .selectAll(".vaccine")
-          .data(infectionData, function(d) { return d.id; })
-        .enter().append("circle")
-          .classed("vaccine", true);
+      // vaccines = vizGroup;
 
       d3.timeout(function() {
         // activate
@@ -72,41 +75,23 @@
           redraw();
         });
         resize(type);
-        simulation = d3.forceSimulation(infectionData)
-          .force("center", d3.forceCenter(width / 2, height / 2))
-          .on("tick", ticked);
         redraw();
-
-        vaccines.transition()
-          .duration(2000)
-          .style("opacity", 1);
-
-        d3.timeout(function() {
-          vaccines.filter(function(d) {
-              return d.class == "adversereaction";
-            })
-            .transition()
-              .duration(500)
-              .style("fill", function(d) {
-                return "#FFB300";
-              });
-        }, 3000);
-
       }, 1000);
 
-      function ticked() {
-        d3.selectAll(".vaccine")
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; });
-      }
-
       function redraw() {
-        radius = (width > 500 ? 8.25 : 4.25);
-        d3.selectAll(".vaccine").attr("r", radius);
-        simulation.force("collision", d3.forceCollide().radius((width > 500 ? radius + 1 : radius + .5)))
-          .force("charge", d3.forceManyBody().strength((width > 500 ? 2 : 2.5)))
-          .force("center", d3.forceCenter(width / 2, height / 2))
-          .alpha(.3).restart();
+        outcomes.attr("cx", width / 2)
+          .attr("cy", height / 2)
+          .attr("r", function(d) {
+            return d[1] / vaxData[0][1] * width / 2;
+          });
+        mask.select("circle")
+          .attr("cx", width / 2)
+            .attr("cy", height / 2)
+            .attr("r", 0)
+            .transition()
+              .ease(d3.easeCubicOut)
+              .duration(7500)
+              .attr("r", width / 2);
       }
     </script>
   </body>
