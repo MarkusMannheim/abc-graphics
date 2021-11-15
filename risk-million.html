@@ -37,9 +37,9 @@
 
       // data
       vaxData = [
-        ["noreaction", 809.6835272],
-        ["adversereaction", 7.189267541],
-        ["severereaction", 3.601545205],
+        ["noreaction", 838.0606844],
+        ["possiblereaction", 8.632745919],
+        ["adversereaction", 4.222008246],
         ["dead", 0.564189584]
       ];
 
@@ -61,7 +61,7 @@
           .attr("id", "legend");
       legendItems = legend
         .selectAll(".legendItem")
-          .data(["no reaction", "adverse reaction", "severe reaction", "dead"])
+          .data(["no reaction", "possible reaction", "adverse reaction", "dead"])
         .enter().append("div")
           .attr("class", function(d) { return d.replace(" ", "").replace("-", "") + " legendItem"; })
           .text(function(d) { return d; });

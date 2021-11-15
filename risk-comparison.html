@@ -50,7 +50,7 @@
           .attr("id", "legend");
       legendItems = legend
         .selectAll(".legendItem")
-          .data(["not severe", "hospitalised", "intensive care", "dead"])
+          .data(["uninfected", "infected"])
         .enter().append("div")
           .attr("class", function(d) { return d.replace(" ", "") + " legendItem"; })
           .text(function(d) { return d; });
@@ -63,12 +63,8 @@
             vax: (d % 2 == 0),
             id: d,
             class: (
-              (d % 2 == 1) && (d / 2 < 1) ? "dead" :
-              (d % 2 == 1) && (d / 2 < 2) ? "icu" :
-              (d % 2 == 1) && (d / 2 < 12) ? "hospital" :
-              (d % 2 == 0) && (d / 2 < 3) ? "hospital" :
-              (d % 2 == 0) && (d / 2 < 15) ? "notsevere" :
-              (d % 2 == 1) && (d / 2 < 55) ? "notsevere" : "uninfected"
+              (d % 2 == 0) && (d / 2 < 1) ? "infected" :
+              (d % 2 == 1) && (d / 2 < 12) ? "infected" : "uninfected"
             )
           };
         });
@@ -100,7 +96,7 @@
 
         d3.timeout(function() {
           nodes.filter(function(d) {
-              return d.class == "dead" || d.class == "icu" || d.class == "hospital" || d.class == "notsevere";
+              return d.class == "infected";
             })
             .transition()
               .delay(function(d, i) {
@@ -108,12 +104,7 @@
               })
               .duration(500)
               .style("fill", function(d) {
-                return (
-                  d.class == "notsevere" ? "#00A388" :
-                  d.class == "dead" ? "#333" :
-                  d.class == "icu" ? "#FF6100" :
-                  "#FFB300"
-                );
+                return "#00A388";
               });
         }, 3000);
 

@@ -41,19 +41,19 @@
           .attr("id", "legend");
       legendItems = legend
         .selectAll(".legendItem")
-          .data(["no reaction", "adverse reaction", "severe reaction", "dead"])
+          .data(["no reaction", "possible reaction", "adverse reaction", "dead"])
         .enter().append("div")
           .attr("class", function(d) { return d.replace(" ", "").replace("-", "") + " legendItem"; })
           .text(function(d) { return d; });
 
         // format data
-        sample = 1000;
+        sample = 1001;
         infectionData = d3.range(sample)
         .map(function(d) {
           return {
             id: d,
             class: (
-              d == 0 ? "adversereaction" :
+              d == 0 ? "possiblereaction" :
               null
             )
           };
@@ -83,7 +83,7 @@
 
         d3.timeout(function() {
           vaccines.filter(function(d) {
-              return d.class == "adversereaction";
+              return d.class == "possiblereaction";
             })
             .transition()
               .duration(500)
@@ -102,7 +102,11 @@
 
       function redraw() {
         radius = (width > 500 ? 8.25 : 4.25);
-        d3.selectAll(".vaccine").attr("r", radius);
+        d3.selectAll(".vaccine").attr("r", function(d) {
+            return d.id == 0 ?
+              Math.sqrt(Math.PI * 0.08 * Math.pow(radius, 2)) :
+              radius;
+          });
         simulation.force("collision", d3.forceCollide().radius((width > 500 ? radius + 1 : radius + .5)))
           .force("charge", d3.forceManyBody().strength((width > 500 ? 2 : 2.5)))
           .force("center", d3.forceCenter(width / 2, height / 2))

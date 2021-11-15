@@ -36,6 +36,14 @@
 .legendItem:last-child {
   margin-right: 0;
 }
+.uninfected.legendItem {
+  background: none;
+  border: solid .5px #333;
+  color: #333;
+}
+.infected.legendItem {
+  background: #00A388;
+}
 .notsevere.legendItem {
   background: #00A388;
 }
@@ -53,20 +61,20 @@
   background: #01CFFF;
   color: #333;
 }
-.adversereaction.legendItem {
+.possiblereaction.legendItem {
   background: #FFB300;
   color: #333;
 }
-.severereaction.legendItem {
+.adversereaction.legendItem {
   background: #FF6100;
 }
 circle.dead {
   fill: #333;
 }
-circle.severereaction {
+circle.adversereaction {
   fill: #FF6100;
 }
-circle.adversereaction {
+circle.possiblereaction {
   fill: #FFB300;
 }
 circle.noreaction {
