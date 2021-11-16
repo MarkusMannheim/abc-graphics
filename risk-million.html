@@ -82,7 +82,8 @@
         outcomes.attr("cx", width / 2)
           .attr("cy", height / 2)
           .attr("r", function(d) {
-            return d[1] / vaxData[0][1] * width / 2;
+            let measure = d3.min([width, height]);
+            return d[1] / vaxData[0][1] * measure / 2;
           });
         mask.select("circle")
           .attr("cx", width / 2)
